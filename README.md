@@ -1,22 +1,23 @@
-# CONNECT+24 – Stay Connected, Anytime, Anywhere
+# CONNECT+24 on GitHub Pages
 
-CONNECT+24 is a modern communication and telecommunications platform designed to bring people closer through simple, fast, and accessible digital connectivity.
+This is a static website (index.html). Chats are saved online in Google Firebase (free tier), so everyone can use it from any device, with no Claude account.
 
-Our platform combines telecommunications services, including SIM cards, mobile recharge, and internet services, with an online chat-room experience where people can connect and communicate without creating an account using a phone number or Gmail.
+## A. Set up Firebase (about 10 minutes)
+1. Go to https://console.firebase.google.com and click **Add project**.
+2. **Build > Authentication > Get started > Sign-in method**: turn on **Anonymous**.
+3. **Authentication > Settings > Authorized domains**: add `YOUR-GITHUB-USERNAME.github.io`  (needed or sign-in fails).
+4. **Build > Firestore Database > Create database**, then open the **Rules** tab and paste the contents of `firestore.rules`, then Publish.
+5. **Build > Storage > Get started** (for photos and videos; this may need the pay-as-you-go plan, small use stays free), then open the **Rules** tab and paste `storage.rules`, then Publish.
+6. **Project settings (gear) > Your apps > Web (</>)**: register an app and copy the `firebaseConfig` values.
+7. Open `index.html`, find `firebaseConfig`, and replace the placeholder values with yours.
 
-### Key Features
+## B. Upload to GitHub
+1. Create an account at github.com, then **New repository** (name it e.g. `connect24`, set it Public).
+2. Click **uploading an existing file**, drag in `index.html` and `.nojekyll`, then **Commit changes**.
+3. Go to **Settings > Pages**. Under Source choose **Deploy from a branch**, branch **main**, folder **/ (root)**, and Save.
+4. After about a minute your site is live at `https://YOUR-GITHUB-USERNAME.github.io/connect24/`.
 
-- **Public Chat Rooms:** Join open conversations and connect with people.
-- **Private Chat Rooms:** Create invitation-only rooms and share unique room codes with selected people.
-- **Guest Access:** Enter with a nickname without phone number or Gmail registration.
-- **Chat History:** Keep conversations saved and accessible through the platform.
-- **Telecom Services:** Explore SIM cards, mobile recharge, and internet services.
-- **WhatsApp Support:** Contact us easily for enquiries and assistance.
-- **Cross-Device Compatibility:** Designed for laptops, desktops, tablets, and mobile phones.
-- **Internet Accessibility:** Access the platform using Wi-Fi or mobile data.
+## C. Use your own domain (ipchat.in)
+In **Settings > Pages > Custom domain** enter your domain, then add the DNS records GitHub shows you at your domain provider.
 
-### Our Vision
-
-Our vision is to make digital communication simple, accessible, and convenient for everyone. CONNECT+24 aims to create a space where people can communicate freely, maintain private conversations, and explore connectivity services in one place.
-
-**CONNECT+24 – One Platform. More Connections. No Boundaries.**
+Note: the Firebase config values are safe to be public; the rules files are what protect your data.
