@@ -102,7 +102,8 @@ form.rec .pill input[type=text],form.rec .pill label{display:none}
 <div id="join"><div class="card">
 <h1>CONNECT+24</h1><p class="s">Join a room and chat with photos and videos.</p>
 <input type="text" id="nm" placeholder="Your name" maxlength="24">
-<input type="text" id="rm" placeholder="Room code (e.g. friends)" maxlength="30">
+<input type="text" id="rm" placeholder="Room code (e.g. 234)" maxlength="30">
+<p class="s" style="margin:-2px 0 16px;font-size:12px">Use the same code on every device. The room is created automatically.</p>
 <button class="btn" id="go">Join room</button>
 </div></div>
 <div id="app" class="hide">
@@ -125,17 +126,19 @@ const clean=s=>s.toLowerCase().replace(/[^a-z0-9-]/g,"-").replace(/^-+|-+$/g,"")
 // ====== 1) PASTE YOUR FIREBASE CONFIG HERE (see README.md) ======
 const firebaseConfig={apiKey:"YOUR_API_KEY",authDomain:"YOUR_PROJECT.firebaseapp.com",projectId:"YOUR_PROJECT",storageBucket:"YOUR_PROJECT.appspot.com",messagingSenderId:"000000000000",appId:"YOUR_APP_ID"};
 // =================================================================
-firebase.initializeApp(firebaseConfig);
+const configured=Object.values(firebaseConfig).every(v=>v&&!String(v).startsWith("YOUR_")&&v!=="000000000000");
+if(configured)firebase.initializeApp(firebaseConfig);
 (async()=>{
+ if(!configured){$("st").textContent="Add your Firebase config to index.html before using shared rooms.";return}
  try{await firebase.auth().signInAnonymously();uid=firebase.auth().currentUser.uid;db=firebase.firestore()}
- catch(e){$("st").textContent="Couldn\u2019t connect. Check the Firebase setup in README.md."}
+ catch(e){$("st").textContent="Couldn\u2019t connect. Enable Anonymous sign-in in Firebase and check your config."}
  try{const st=firebase.storage();assets={upload:async f=>{const r=st.ref("rooms/"+room+"/"+Date.now()+"_"+f.name.replace(/[^\w.-]/g,"_"));await r.put(f);return{url:await r.getDownloadURL()}}}}catch(e){}
  if(!assets)$("fl").parentElement.classList.add("hide");
 })();
 $("go").onclick=()=>{
  name=$("nm").value.trim()||"Guest";room=clean($("rm").value);
  if(!room){$("rm").focus();return}
- if(!db){alert("Not connected yet. Check your Firebase config and try again.");return}
+ if(!db){$("st").textContent="Shared rooms are not ready. Check the Firebase setup in index.html.";return}
  location.hash=room;
  $("join").classList.add("hide");$("app").classList.remove("hide");
  $("rt").firstChild.textContent="#"+room;$("rs").textContent="CONNECT+24";
